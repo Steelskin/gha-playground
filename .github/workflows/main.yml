@@ -1,0 +1,43 @@
+name: GHA Playground
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    name: Setup workflow
+    outputs:
+      potato_matrix: ${{ steps.export-matrix.outputs.potato_matrix }}
+      tomato_matrix: ${{ steps.export-matrix.outputs.tomato_matrix }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Export matrix
+        id: export-matrix
+        run: |
+          potato_matrix=$(<${{ github.workspace }}/matrix-potato.json)
+          potato_matrix=${potato_matrix//$'\n'/ }
+          echo potato_matrix="$potato_matrix" >> ${GITHUB_OUTPUT}
+          tomato_matrix=$(<${{ github.workspace }}/matrix-tomato.json)
+          tomato_matrix=${tomato_matrix//$'\n'/ }
+          echo tomato_matrix="$tomato_matrix" >> ${GITHUB_OUTPUT}
+
+  echo-potato:
+    needs: [setup]
+    uses: ./.github/workflows/echo.yml
+    with:
+      host: potato
+      matrix: ${{ needs.setup.outputs.potato_matrix }}
+
+  echo-tomato:
+    needs: [setup]
+    uses: ./.github/workflows/echo.yml
+    with:
+      host: tomato
+      matrix: ${{ needs.setup.outputs.tomato_matrix }}
+

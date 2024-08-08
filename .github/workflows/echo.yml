@@ -1,0 +1,19 @@
+on:
+  workflow_call:
+    inputs:
+      host:
+        required: true
+        type: string
+      matrix:
+        required: true
+        type: string
+
+jobs:
+  echo:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJSON(inputs.matrix) }}
+    steps:
+      - name: Echo ${{ inputs.host }} ${{ matrix.target }} ${{ matrix.option }}
+        run: |
+          echo host=${{ inputs.host }} target=${{ matrix.target }} option=${{ matrix.option }}
