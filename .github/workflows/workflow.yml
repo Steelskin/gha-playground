@@ -1,0 +1,33 @@
+name: GHA Playground
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.export-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Export matrix
+        id: export-matrix
+        run: |
+          matrix=$(<${{ github.workspace }}/matrix.json)
+          matrix=${matrix//$'\n'/ }
+          echo matrix="$matrix" >> ${GITHUB_OUTPUT}
+
+  echo:
+    needs: [setup]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJSON(needs.setup.outputs.matrix) }}
+    name: Echo ${{ matrix.host }} ${{ matrix.target }} ${{ matrix.option }}
+    steps:
+      - name: Echo matrix
+        run: |
+          echo host=${{ matrix.host }} target=${{ matrix.target }} option_name=${{ matrix.option }}

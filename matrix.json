@@ -1,0 +1,34 @@
+{
+    "host": [
+        "potato",
+        "tomato"
+    ],
+    "include": [
+        {
+            "host": "potato",
+            "target": "potato",
+            "option": [
+                "option1",
+                "option2"
+            ]
+        },
+        {
+            "host": "tomato",
+            "target": "tomato",
+            "option": [
+                "option3",
+                "option4",
+                "option5"
+            ]
+        },
+        {
+            "target": "cucumber",
+            "option": [
+                "option6",
+                "option7",
+                "option8",
+                "option9"
+            ]
+        }
+    ]
+}
