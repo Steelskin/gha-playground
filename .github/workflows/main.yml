@@ -14,18 +14,88 @@ jobs:
       tomato_matrix: ${{ steps.export-matrix.outputs.tomato_matrix }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Export matrix
-        id: export-matrix
+      - name: Setup Options
+        id: setup-options
         run: |
-          potato_matrix=$(<${{ github.workspace }}/matrix-potato.json)
-          potato_matrix=${potato_matrix//$'\n'/ }
-          echo potato_matrix="$potato_matrix" >> ${GITHUB_OUTPUT}
-          tomato_matrix=$(<${{ github.workspace }}/matrix-tomato.json)
-          tomato_matrix=${tomato_matrix//$'\n'/ }
-          echo tomato_matrix="$tomato_matrix" >> ${GITHUB_OUTPUT}
+          echo potato_option=1 >> ${GITHUB_OUTPUT}
+          echo tomato_option=2 >> ${GITHUB_OUTPUT}
+
+      - name: Setup matrix
+        id: export-matrix
+        env:
+          POTATO_MATRIX: >-
+            {
+              "include": [
+                  {
+                      "target": "potato",
+                      "option": "option1",
+                      "cc_option": ${{ steps.setup-options.outputs.potato_option }}
+                  },
+                  {
+                      "target": "potato",
+                      "option": "option2",
+                      "cc_option": ${{ steps.setup-options.outputs.potato_option }}
+                  },
+                  {
+                      "target": "cucumber",
+                      "option": "option6",
+                      "cc_option": ${{ steps.setup-options.outputs.potato_option }}
+                  },
+                  {
+                      "target": "cucumber",
+                      "option": "option7",
+                      "cc_option": ${{ steps.setup-options.outputs.potato_option }}
+                  },
+                  {
+                      "target": "cucumber",
+                      "option": "option8",
+                      "cc_option": ${{ steps.setup-options.outputs.potato_option }}
+                  },
+                  {
+                      "target": "cucumber",
+                      "option": "option9",
+                      "cc_option": ${{ steps.setup-options.outputs.potato_option }}
+                  }
+              ]
+            }
+          TOMATO_MATRIX: >-
+            {
+              "include": [
+                  {
+                      "target": "tomato",
+                      "option": "option3",
+                      "cc_option": ${{ steps.setup-options.outputs.tomato_option }}
+                  },
+                  {
+                      "target": "tomato",
+                      "option": "option4",
+                      "cc_option": ${{ steps.setup-options.outputs.tomato_option }}
+                  },
+                  {
+                      "target": "cucumber",
+                      "option": "option6",
+                      "cc_option": ${{ steps.setup-options.outputs.tomato_option }}
+                  },
+                  {
+                      "target": "cucumber",
+                      "option": "option7",
+                      "cc_option": ${{ steps.setup-options.outputs.tomato_option }}
+                  },
+                  {
+                      "target": "cucumber",
+                      "option": "option8",
+                      "cc_option": ${{ steps.setup-options.outputs.tomato_option }}
+                  },
+                  {
+                      "target": "cucumber",
+                      "option": "option9",
+                      "cc_option": ${{ steps.setup-options.outputs.tomato_option }}
+                  }
+              ]
+            }
+        run: |
+          echo potato_matrix=$(jq -r -c '.' <<< ${POTATO_MATRIX}) >> ${GITHUB_OUTPUT}
+          echo tomato_matrix=$(jq -r -c '.' <<< ${TOMATO_MATRIX}) >> ${GITHUB_OUTPUT}
 
   echo-potato:
     needs: [setup]

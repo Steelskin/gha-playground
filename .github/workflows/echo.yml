@@ -14,6 +14,6 @@ jobs:
     strategy:
       matrix: ${{ fromJSON(inputs.matrix) }}
     steps:
-      - name: Echo ${{ inputs.host }} ${{ matrix.target }} ${{ matrix.option }}
+      - name: Echo ${{ inputs.host }} ${{ matrix.target }} ${{ matrix.option }} ${{ matrix.cc_option }}
         run: |
-          echo host=${{ inputs.host }} target=${{ matrix.target }} option=${{ matrix.option }}
+          echo host=${{ inputs.host }} target=${{ matrix.target }} option=${{ matrix.option }} cc_option=${{ matrix.cc_option }}
